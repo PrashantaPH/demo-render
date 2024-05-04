@@ -1,8 +1,13 @@
+FROM maven:3.9.2-eclipse-temurin-17-alpine as builder
+
+COPY ./src src/
+COPY ./pom.xml pom.xml
+
+RUN mvn clean package -DskipTests
+
 FROM eclipse-temurin:17-jre-alpine
 
-VOLUME /tmp
-
-COPY target/*.jar demo-render.jar
+COPY --from=builder target/*.jar demo-render.jar
 
 EXPOSE 8080
 
